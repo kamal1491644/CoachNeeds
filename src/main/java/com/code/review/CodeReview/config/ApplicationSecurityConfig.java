@@ -1,4 +1,4 @@
-package com.code.review.CodeReview;
+package com.code.review.CodeReview.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login","/resources/**","/css/**","/fonts/**","/img/**").permitAll()
+                .antMatchers("/login","/resources/**","/css/**","/js/**","/fonts/**","/img/**","/images/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
