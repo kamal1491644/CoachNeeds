@@ -13,10 +13,5 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/test")
 public class AppController {
-    @GetMapping
-    public ResponseEntity<Object> getUsers(@RequestHeader HttpHeaders httpHeaders) {
-        return ResponseEntity.ok().body("Hi user!");
-    }
-
 
 }
