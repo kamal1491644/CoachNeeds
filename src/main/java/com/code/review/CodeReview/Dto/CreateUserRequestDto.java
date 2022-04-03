@@ -1,11 +1,11 @@
-package com.code.review.CodeReview.http.requests;
+package com.code.review.CodeReview.Dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateUserRequest {
+public class CreateUserRequestDto {
     String username;
     String password;
     String email;

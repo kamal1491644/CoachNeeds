@@ -2,8 +2,8 @@ package com.code.review.CodeReview.controller;
 
 
 import com.code.review.CodeReview.config.KeycloakProvider;
-import com.code.review.CodeReview.http.requests.CreateUserRequest;
-import com.code.review.CodeReview.http.requests.LoginRequest;
+import com.code.review.CodeReview.Dto.CreateUserRequestDto;
+import com.code.review.CodeReview.Dto.LoginRequestDto;
 import com.code.review.CodeReview.service.KeycloakAdminClientService;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.AccessTokenResponse;
@@ -34,14 +34,14 @@ public class UserController {
 
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest user) {
+    public ResponseEntity<?> createUser(@RequestBody CreateUserRequestDto user) {
         Response createdResponse = kcAdminClient.createKeycloakUser(user);
         return ResponseEntity.status(createdResponse.getStatus()).build();
 
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenResponse> login(@NotNull @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AccessTokenResponse> login(@NotNull @RequestBody LoginRequestDto loginRequest) {
         Keycloak keycloak = kcProvider.newKeycloakBuilderWithPasswordCredentials(loginRequest.getUsername(), loginRequest.getPassword()).build();
 
         AccessTokenResponse accessTokenResponse = null;

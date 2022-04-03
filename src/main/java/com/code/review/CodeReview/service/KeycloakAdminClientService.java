@@ -1,7 +1,7 @@
 package com.code.review.CodeReview.service;
 
 import com.code.review.CodeReview.config.KeycloakProvider;
-import com.code.review.CodeReview.http.requests.CreateUserRequest;
+import com.code.review.CodeReview.Dto.CreateUserRequestDto;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -31,7 +31,7 @@ public class KeycloakAdminClientService {
         return passwordCredentials;
     }
 
-    public Response createKeycloakUser(CreateUserRequest user) {
+    public Response createKeycloakUser(CreateUserRequestDto user) {
         UsersResource usersResource = kcProvider.getInstance().realm(realm).users();
         CredentialRepresentation credentialRepresentation = createPasswordCredentials(user.getPassword());
 
