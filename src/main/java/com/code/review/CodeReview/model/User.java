@@ -3,6 +3,7 @@ package com.code.review.CodeReview.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Setter
@@ -21,4 +22,5 @@ public class User {
     private String userName;
     private String password;
     private String email;
+    private Instant createdAt;
 }

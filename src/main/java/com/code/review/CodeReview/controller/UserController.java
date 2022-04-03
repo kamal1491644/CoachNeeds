@@ -4,7 +4,7 @@ package com.code.review.CodeReview.controller;
 import com.code.review.CodeReview.config.KeycloakProvider;
 import com.code.review.CodeReview.Dto.CreateUserRequestDto;
 import com.code.review.CodeReview.Dto.LoginRequestDto;
-import com.code.review.CodeReview.service.KeycloakAdminClientService;
+import com.code.review.CodeReview.service.UserService;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
@@ -23,11 +23,11 @@ import javax.ws.rs.core.Response;
 @RequestMapping("/user")
 public class UserController {
     private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(UserController.class);
-    private final KeycloakAdminClientService kcAdminClient;
+    private final UserService kcAdminClient;
     private final KeycloakProvider kcProvider;
 
 
-    public UserController(KeycloakAdminClientService kcAdminClient, KeycloakProvider kcProvider) {
+    public UserController(UserService kcAdminClient, KeycloakProvider kcProvider) {
         this.kcProvider = kcProvider;
         this.kcAdminClient = kcAdminClient;
     }

@@ -2,24 +2,31 @@ package com.code.review.CodeReview.service;
 
 import com.code.review.CodeReview.config.KeycloakProvider;
 import com.code.review.CodeReview.Dto.CreateUserRequestDto;
+import com.code.review.CodeReview.model.User;
+import com.code.review.CodeReview.repository.UserRepository;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
+import java.time.Instant;
 import java.util.Collections;
 
 
 @Service
-public class KeycloakAdminClientService {
+public class UserService {
     private final KeycloakProvider kcProvider;
     @Value("${keycloak.realm}")
     public String realm;
 
+    @Autowired
+    UserRepository userRepository;
 
-    public KeycloakAdminClientService(KeycloakProvider keycloakProvider) {
+
+    public UserService(KeycloakProvider keycloakProvider) {
         this.kcProvider = keycloakProvider;
     }
 
@@ -47,20 +54,19 @@ public class KeycloakAdminClientService {
         Response response = usersResource.create(kcUser);
 
         if (response.getStatus() == 201) {
-            //If you want to save the user to your other database, do it here, for example:
-            //            User localUser = new User();
-            //            localUser.setFirstName(kcUser.getFirstName());
-            //            localUser.setLastName(kcUser.getLastName());
-            //            localUser.setEmail(user.getEmail());
-            //            localUser.setCreatedDate(Timestamp.from(Instant.now()));
-            //            String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
-            //            usersResource.get(userId).sendVerifyEmail();
-            //            userRepository.save(localUser);
+            User localUser = new User();
+            saveUser(localUser, kcUser);
+            //TODO: Handle failing of saving user in local database
         }
-
         return response;
-
     }
 
-
+    public void saveUser(User user, UserRepresentation kcUser){
+        user.setFirstName(kcUser.getFirstName());
+        user.setLastName(kcUser.getLastName());
+        user.setEmail(kcUser.getEmail());
+        user.setCreatedAt(Instant.now());
+        user.setUserName(kcUser.getUsername());
+        userRepository.save(user);
+    }
 }
