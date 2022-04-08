@@ -1,8 +1,11 @@
 package com.code.review.CodeReview.service;
 
+import com.code.review.CodeReview.Dto.CodeRequestDto;
 import com.code.review.CodeReview.config.KeycloakProvider;
 import com.code.review.CodeReview.Dto.CreateUserRequestDto;
+import com.code.review.CodeReview.model.Code;
 import com.code.review.CodeReview.model.User;
+import com.code.review.CodeReview.repository.CodeRepository;
 import com.code.review.CodeReview.repository.UserRepository;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -13,7 +16,10 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -24,6 +30,9 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CodeRepository codeRepository;
 
 
     public UserService(KeycloakProvider keycloakProvider) {
@@ -49,7 +58,7 @@ public class UserService {
         kcUser.setLastName(user.getLastname());
         kcUser.setEmail(user.getEmail());
         kcUser.setEnabled(true);
-        kcUser.setEmailVerified(false);
+        kcUser.setEmailVerified(true);
 
         Response response = usersResource.create(kcUser);
 
@@ -68,5 +77,14 @@ public class UserService {
         user.setCreatedAt(Instant.now());
         user.setUserName(kcUser.getUsername());
         userRepository.save(user);
+    }
+    public void submitCode(CodeRequestDto codeRequestDto, Integer userId){
+        Optional<User> user = userRepository.findById(userId);
+        Code code = new Code();
+        code.setCode(codeRequestDto.getCode());
+        code.setProgrammingLanguages(codeRequestDto.getProgrammingLanguages());
+        code.setCreatedAt(Instant.now());
+        code.setUser(user.get());
+        codeRepository.save(code);
     }
 }

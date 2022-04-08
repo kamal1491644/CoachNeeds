@@ -1,10 +1,10 @@
 package com.code.review.CodeReview.model;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Setter
@@ -12,15 +12,16 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-public class User {
+@Table(name = "code")
+public class Code {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String firstName;
-    private String lastName;
-    private String userName;
-    private String password;
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name="user_id",nullable = false)
+    private User user;
+    private String code;
+    private String programmingLanguages;
     private Instant createdAt;
+
 }
