@@ -17,4 +17,6 @@ public class CreateUserRequestDto {
     String firstname;
     @JsonProperty("last_name")
     String lastname;
+    @JsonProperty("role")
+    String role;
 }

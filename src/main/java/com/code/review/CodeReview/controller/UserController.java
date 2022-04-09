@@ -13,6 +13,7 @@ import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -54,10 +55,14 @@ public class UserController {
         }
 
     }
-    @PostMapping("/{user_id}/code")
-    public void submitCode(@RequestBody CodeRequestDto codeRequestDto, @PathVariable("user_id") Integer userId){
-        kcAdminClient.submitCode(codeRequestDto,userId);
+    @PostMapping("/{subject_id}/code")
+
+    public void submitCode(@RequestBody CodeRequestDto codeRequestDto,
+                           @PathVariable("subject_id") String subjectId){
+        kcAdminClient.submitCode(codeRequestDto,subjectId);
     }
+
+
 
 
 }

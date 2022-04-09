@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -50,41 +47,42 @@ public class UserService {
     public Response createKeycloakUser(CreateUserRequestDto user) {
         UsersResource usersResource = kcProvider.getInstance().realm(realm).users();
         CredentialRepresentation credentialRepresentation = createPasswordCredentials(user.getPassword());
-
         UserRepresentation kcUser = new UserRepresentation();
-        kcUser.setUsername(user.getEmail());
+        kcUser.setUsername(user.getUsername());
         kcUser.setCredentials(Collections.singletonList(credentialRepresentation));
         kcUser.setFirstName(user.getFirstname());
         kcUser.setLastName(user.getLastname());
         kcUser.setEmail(user.getEmail());
         kcUser.setEnabled(true);
         kcUser.setEmailVerified(true);
-
         Response response = usersResource.create(kcUser);
-
+        kcProvider.addRealmRoleToUser(user.getUsername(), user.getRole());
         if (response.getStatus() == 201) {
             User localUser = new User();
-            saveUser(localUser, kcUser);
+            saveUser(localUser, kcUser, user);
             //TODO: Handle failing of saving user in local database
         }
         return response;
     }
 
-    public void saveUser(User user, UserRepresentation kcUser){
+    public void saveUser(User user, UserRepresentation kcUser, CreateUserRequestDto inUser) {
         user.setFirstName(kcUser.getFirstName());
         user.setLastName(kcUser.getLastName());
         user.setEmail(kcUser.getEmail());
         user.setCreatedAt(Instant.now());
         user.setUserName(kcUser.getUsername());
+        user.setRole(inUser.getRole());
+        user.setSubjectId(kcProvider.getUserSubjectId(user.getUserName()));
         userRepository.save(user);
     }
-    public void submitCode(CodeRequestDto codeRequestDto, Integer userId){
-        Optional<User> user = userRepository.findById(userId);
+
+    public void submitCode(CodeRequestDto codeRequestDto, String subjectId) {
+        User user = userRepository.findBySubjectId(subjectId);
         Code code = new Code();
         code.setCode(codeRequestDto.getCode());
         code.setProgrammingLanguages(codeRequestDto.getProgrammingLanguages());
         code.setCreatedAt(Instant.now());
-        code.setUser(user.get());
+        code.setUser(user);
         codeRepository.save(code);
     }
 }
