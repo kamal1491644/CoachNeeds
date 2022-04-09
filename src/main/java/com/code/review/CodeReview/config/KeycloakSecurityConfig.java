@@ -26,6 +26,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         super.configure(http);
         http.authorizeRequests()
                 .antMatchers("/**/code").hasAnyRole("programmer")
+                .antMatchers("/**/all").hasAnyRole("mentor")
                 .anyRequest()
                 .permitAll();
         http.csrf().disable();

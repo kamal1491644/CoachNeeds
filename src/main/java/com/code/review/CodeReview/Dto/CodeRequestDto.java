@@ -13,4 +13,8 @@ public class CodeRequestDto {
     private String code;
     @JsonProperty("programming_languages")
     private String programmingLanguages;
+    @JsonProperty("ranking")
+    private Integer  ranking;
+    @JsonProperty("comment")
+    private String comment;
 }

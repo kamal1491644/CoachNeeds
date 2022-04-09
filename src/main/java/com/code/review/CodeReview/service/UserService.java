@@ -83,6 +83,10 @@ public class UserService {
         code.setProgrammingLanguages(codeRequestDto.getProgrammingLanguages());
         code.setCreatedAt(Instant.now());
         code.setUser(user);
+        code.setComment(codeRequestDto.getComment());
+        code.setRanking(codeRequestDto.getRanking());
         codeRepository.save(code);
     }
+
+
 }
