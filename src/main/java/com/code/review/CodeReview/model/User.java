@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Setter
@@ -14,16 +13,49 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer","handler"})
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "subject_id")
     private String subjectId;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "user_name")
     private String userName;
+
+    @Column(name = "email")
     private String email;
-    private String role;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "date_of_birth")
+    private String dateOfBirth;
+
+    @Column(name = "Address")
+    private String address;
+
+    @Column(name = "created_at")
     private Instant createdAt;
+
+    @Column(name = "points_balance")
+    private String pointsBalance;
+
+    @Column(name = "current_level")
+    private String currentLevel;
+
+    @Column(name = "next_level")
+    private String nextLevel;
+
+
 }

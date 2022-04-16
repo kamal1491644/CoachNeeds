@@ -1,7 +1,6 @@
 package com.code.review.CodeReview.config;
 
 
-
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -55,63 +54,29 @@ public class KeycloakProvider {
                 .password(password);
     }
 
-    public List<String> getAllRoles(){
-        ClientRepresentation clientRep = keycloak
-                .realm(realm)
-                .clients()
-                .findByClientId(clientID)
-                .get(0);
-        List<String> availableRoles = keycloak
-                .realm(realm)
-                .clients()
-                .get(clientRep.getId())
-                .roles()
-                .list()
-                .stream()
-                .map(role -> role.getName())
-                .collect(Collectors.toList());
+    public List<String> getAllRoles() {
+        ClientRepresentation clientRep = keycloak.realm(realm).clients().findByClientId(clientID).get(0);
+        List<String> availableRoles = keycloak.realm(realm).clients().get(clientRep.getId()).roles().list().stream().map(role -> role.getName()).collect(Collectors.toList());
         return availableRoles;
     }
 
-    public void addRealmRoleToUser(String userName, String role_name){
+    public void addRealmRoleToUser(String userName, String role_name) {
         keycloak = getInstance();
-        String client_id = keycloak
-                .realm(realm)
-                .clients()
-                .findByClientId(clientID)
-                .get(0)
-                .getId();
-        String userId = keycloak
-                .realm(realm)
-                .users()
-                .search(userName)
-                .get(0)
-                .getId();
-        UserResource user = keycloak
-                .realm(realm)
-                .users()
-                .get(userId);
+        String client_id = keycloak.realm(realm).clients().findByClientId(clientID).get(0).getId();
+        String userId = keycloak.realm(realm).users().search(userName).get(0).getId();
+        UserResource user = keycloak.realm(realm).users().get(userId);
         List<RoleRepresentation> roleToAdd = new LinkedList<>();
-        roleToAdd.add(keycloak
-                .realm(realm)
-                .clients()
-                .get(client_id)
-                .roles()
-                .get(role_name)
-                .toRepresentation()
-        );
+        roleToAdd.add(keycloak.realm(realm).clients().get(client_id).roles().get("user").toRepresentation());
+        roleToAdd.add(keycloak.realm(realm).clients().get(client_id).roles().get(role_name).toRepresentation());
         user.roles().clientLevel(client_id).add(roleToAdd);
     }
 
-    public String getUserSubjectId(String userName){
-        String userId = keycloak
-                .realm(realm)
-                .users()
-                .search(userName)
-                .get(0)
-                .getId();
+    public String getUserSubjectId(String userName) {
+        keycloak = getInstance();
+        String userId = keycloak.realm(realm).users().search(userName).get(0).getId();
         return userId;
     }
+
     public JsonNode refreshToken(String refreshToken) throws UnirestException {
         String url = serverURL + "/realms/" + realm + "/protocol/openid-connect/token";
         return Unirest.post(url).header("Content-Type", "application/x-www-form-urlencoded").field("client_id", clientID).field("client_secret", clientSecret).field("refresh_token", refreshToken).field("grant_type", "refresh_token").asJson().getBody();
