@@ -1,9 +1,9 @@
 package com.code.review.CodeReview.service;
 
-import com.code.review.CodeReview.Dto.CreateUserRequestDto;
+import com.code.review.CodeReview.Dto.RegisterCoachDto;
 import com.code.review.CodeReview.config.KeycloakProvider;
-import com.code.review.CodeReview.model.User;
-import com.code.review.CodeReview.repository.UserRepository;
+import com.code.review.CodeReview.model.Coach;
+import com.code.review.CodeReview.repository.CoachRepository;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -20,16 +20,16 @@ import java.util.List;
 
 
 @Service
-public class UserService {
-    private final static Logger logger = LoggerFactory.getLogger(UserService.class);
+public class CoachService {
+    private final static Logger logger = LoggerFactory.getLogger(CoachService.class);
     private final KeycloakProvider kcProvider;
     @Value("${keycloak.realm}")
     public String realm;
 
     @Autowired
-    UserRepository userRepository;
+    CoachRepository userRepository;
 
-    public UserService(KeycloakProvider keycloakProvider) {
+    public CoachService(KeycloakProvider keycloakProvider) {
         this.kcProvider = keycloakProvider;
     }
 
@@ -43,7 +43,7 @@ public class UserService {
         return passwordCredentials;
     }
 
-    public Response createKeycloakUser(CreateUserRequestDto user) {
+    public Response createKeycloakUser(RegisterCoachDto user) {
         logger.info("createKeycloakUser() --> creating user: {}", user);
         UsersResource usersResource = kcProvider.getInstance().realm(realm).users();
         CredentialRepresentation credentialRepresentation = createPasswordCredentials(user.getPassword());
@@ -58,17 +58,17 @@ public class UserService {
         Response response = usersResource.create(kcUser);
         //kcProvider.addRealmRoleToUser(user.getUserName(), user.getRole());
         if (response.getStatus() == 201) {
-            logger.debug("createKeycloakUser() --> User created :{}", kcUser);
+            logger.debug("createKeycloakUser() --> Coach created :{}", kcUser);
             logger.debug("createKeycloakUser() --> Saving user in local storage....");
-            User localUser = new User();
-            saveUser(localUser, kcUser, user);
+            Coach localUser = new Coach();
+            saveCoach(localUser, kcUser, user);
 
             //TODO: Handle failing of saving user in local database
         }
         return response;
     }
 
-    public void saveUser(User user, UserRepresentation kcUser, CreateUserRequestDto inUser) {
+    public void saveCoach(Coach user, UserRepresentation kcUser, RegisterCoachDto inUser) {
         logger.debug("saveUser() --> saving user in local storage :{}", inUser);
         user.setFirstName(kcUser.getFirstName());
         user.setLastName(kcUser.getLastName());
@@ -81,19 +81,19 @@ public class UserService {
         user.setDateOfBirth(inUser.getDateOfBirth());
         user.setPassword(inUser.getPassword());
         userRepository.save(user);
-        logger.debug("saveUser() --> User created in local storage :{}", user);
+        logger.debug("saveUser() --> Coach created in local storage :{}", user);
     }
 
-    public List<User> getAllUsers() {
+    public List<Coach> getAllCoaches() {
         logger.info("getAllUsers() --> getting all users.....");
-        List<User> users = userRepository.findAll();
+        List<Coach> users = userRepository.findAll();
         logger.debug("getAllUsers() --> listed users:{}", users);
         return users;
     }
 
-    public User getUserById(String userId) {
+    public Coach getCoachById(String userId) {
         logger.info("getUserById() --> getting user by id:{}", userId);
-        User user = userRepository.findBySubjectId(userId);
+        Coach user = userRepository.findBySubjectId(userId);
         logger.debug("getUserById() --> user :{} with id :{}",user, userId);
         return user;
     }

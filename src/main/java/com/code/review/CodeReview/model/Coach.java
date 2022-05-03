@@ -12,9 +12,9 @@ import java.time.Instant;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "coaches")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-public class User {
+public class Coach {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -48,14 +48,7 @@ public class User {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @Column(name = "points_balance")
-    private String pointsBalance;
 
-    @Column(name = "current_level")
-    private String currentLevel;
-
-    @Column(name = "next_level")
-    private String nextLevel;
 
 
 }

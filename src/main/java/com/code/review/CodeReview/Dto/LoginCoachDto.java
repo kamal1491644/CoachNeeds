@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequestDto {
+public class LoginCoachDto {
     @JsonProperty("username")
     String username;
     @JsonProperty("password")

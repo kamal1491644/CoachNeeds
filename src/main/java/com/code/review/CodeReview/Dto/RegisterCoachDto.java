@@ -10,7 +10,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @ToString
-public class CreateUserRequestDto {
+public class RegisterCoachDto {
     @JsonProperty("first_name")
     private String firstName;
 
