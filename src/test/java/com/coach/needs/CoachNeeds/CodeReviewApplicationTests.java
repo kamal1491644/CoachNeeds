@@ -1,4 +1,4 @@
-package com.code.review.CodeReview;
+package com.coach.needs.CoachNeeds;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

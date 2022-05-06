@@ -1,4 +1,4 @@
-package com.code.review.CodeReview.Dto;
+package com.coach.needs.CoachNeeds.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

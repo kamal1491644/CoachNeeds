@@ -1,6 +1,6 @@
-package com.code.review.CodeReview.repository;
+package com.coach.needs.CoachNeeds.repository;
 
-import com.code.review.CodeReview.model.Coach;
+import com.coach.needs.CoachNeeds.model.Coach;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.code.review.CodeReview.model;
+package com.coach.needs.CoachNeeds.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -19,49 +19,56 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "first_name")
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="coach_id",nullable = false)
+    private Coach coach;
+
+    @Column(name ="first_name")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name ="last_name")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name ="email")
     private String email;
 
-    @Column(name = "gender")
+    @Column(name ="gender")
     private String gender;
 
-    @Column(name = "date_of_birth")
+    @Column(name ="date_of_birth")
     private String dateOfBirth;
 
-    @Column(name = "Address")
+    @Column(name ="address")
     private String address;
 
-    @Column(name = "weight")
+    @Column(name ="weight")
     private String weight;
 
-    @Column(name = "height")
+    @Column(name ="height")
     private String height;
 
-    @Column(name = "age")
+    @Column(name ="age")
     private String age;
 
-    @Column(name = "mobile")
+    @Column(name ="mobile")
     private String mobile;
 
-    @Column(name = "whats_app")
+    @Column(name ="whats_app")
     private String whatsApp;
 
-    @Column(name = "paid_money")
+    @Column(name ="paid_money")
     private Double paidMoney;
 
-    @Column(name = "training_type")
+    @Column(name ="training_type")
     private String trainingType;
 
-    @Column(name = "state")
-    private String state;
+    @Column(name ="client_state")
+    private String clientState;
 
-    @Column(name = "created_at")
+    @Column(name ="country")
+    private String country;
+
+    @Column(name ="created_at")
     private Instant createdAt;
-
 }
