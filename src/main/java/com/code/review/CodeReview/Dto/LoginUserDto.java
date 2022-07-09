@@ -12,9 +12,10 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginCoachDto {
+public class LoginUserDto {
     @JsonProperty("username")
     String username;
+
     @JsonProperty("password")
     String password;
 }

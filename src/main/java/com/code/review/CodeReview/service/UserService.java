@@ -1,9 +1,9 @@
 package com.code.review.CodeReview.service;
 
-import com.code.review.CodeReview.Dto.RegisterCoachDto;
+import com.code.review.CodeReview.Dto.RegisterUserDto;
 import com.code.review.CodeReview.config.KeycloakProvider;
-import com.code.review.CodeReview.model.Coach;
-import com.code.review.CodeReview.repository.CoachRepository;
+import com.code.review.CodeReview.model.User;
+import com.code.review.CodeReview.repository.UserRepository;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -20,16 +20,16 @@ import java.util.List;
 
 
 @Service
-public class CoachService {
-    private final static Logger logger = LoggerFactory.getLogger(CoachService.class);
+public class UserService {
+    private final static Logger logger = LoggerFactory.getLogger(UserService.class);
     private final KeycloakProvider kcProvider;
     @Value("${keycloak.realm}")
     public String realm;
 
     @Autowired
-    CoachRepository userRepository;
+    UserRepository userRepository;
 
-    public CoachService(KeycloakProvider keycloakProvider) {
+    public UserService(KeycloakProvider keycloakProvider) {
         this.kcProvider = keycloakProvider;
     }
 
@@ -43,8 +43,8 @@ public class CoachService {
         return passwordCredentials;
     }
 
-    public Response createKeycloakUser(RegisterCoachDto user) {
-        logger.info("createKeycloakUser() --> creating user: {}", user);
+    public Response createUser(RegisterUserDto user) {
+        logger.info("createUser() --> creating user: {}", user);
         UsersResource usersResource = kcProvider.getInstance().realm(realm).users();
         CredentialRepresentation credentialRepresentation = createPasswordCredentials(user.getPassword());
         UserRepresentation kcUser = new UserRepresentation();
@@ -56,19 +56,17 @@ public class CoachService {
         kcUser.setEnabled(true);
         kcUser.setEmailVerified(true);
         Response response = usersResource.create(kcUser);
-        //kcProvider.addRealmRoleToUser(user.getUserName(), user.getRole());
         if (response.getStatus() == 201) {
-            logger.debug("createKeycloakUser() --> Coach created :{}", kcUser);
-            logger.debug("createKeycloakUser() --> Saving user in local storage....");
-            Coach localUser = new Coach();
-            saveCoach(localUser, kcUser, user);
-
+            logger.debug("createUser() --> User created :{}", kcUser);
+            logger.debug("createUser() --> Saving user in local storage....");
+            User localUser = new User();
+            saveUser(localUser, kcUser, user);
             //TODO: Handle failing of saving user in local database
         }
         return response;
     }
 
-    public void saveCoach(Coach user, UserRepresentation kcUser, RegisterCoachDto inUser) {
+    public void saveUser(User user, UserRepresentation kcUser, RegisterUserDto inUser) {
         logger.debug("saveUser() --> saving user in local storage :{}", inUser);
         user.setFirstName(kcUser.getFirstName());
         user.setLastName(kcUser.getLastName());
@@ -76,25 +74,16 @@ public class CoachService {
         user.setCreatedAt(Instant.now());
         user.setUserName(kcUser.getUsername());
         user.setSubjectId(kcProvider.getUserSubjectId(user.getUserName()));
-        user.setAddress(inUser.getAddress());
+        user.setCountry(inUser.getCountry());
+        user.setCity(inUser.getCity());
+        user.setArea(inUser.getArea());
         user.setGender(inUser.getGender());
         user.setDateOfBirth(inUser.getDateOfBirth());
         user.setPassword(inUser.getPassword());
+        user.setMobileNUmber(inUser.getMobileNUmber());
+        user.setWhatsApp(inUser.getWhatsApp());
+        user.setAge(inUser.getAge());
         userRepository.save(user);
-        logger.debug("saveUser() --> Coach created in local storage :{}", user);
-    }
-
-    public List<Coach> getAllCoaches() {
-        logger.info("getAllUsers() --> getting all users.....");
-        List<Coach> users = userRepository.findAll();
-        logger.debug("getAllUsers() --> listed users:{}", users);
-        return users;
-    }
-
-    public Coach getCoachById(String userId) {
-        logger.info("getUserById() --> getting user by id:{}", userId);
-        Coach user = userRepository.findBySubjectId(userId);
-        logger.debug("getUserById() --> user :{} with id :{}",user, userId);
-        return user;
+        logger.debug("saveUser() --> User created in local storage :{}", user);
     }
 }

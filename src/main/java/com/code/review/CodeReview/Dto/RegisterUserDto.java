@@ -6,11 +6,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @ToString
-public class RegisterCoachDto {
+public class RegisterUserDto {
     @JsonProperty("first_name")
     private String firstName;
 
@@ -30,13 +31,28 @@ public class RegisterCoachDto {
     private String gender;
 
     @JsonProperty("date_of_birth")
-    private String dateOfBirth;
+    private Instant dateOfBirth;
 
-    @JsonProperty("Address")
-    private String address;
+    @JsonProperty("country")
+    private String country;
+
+    @JsonProperty("city")
+    private String city;
+
+    @JsonProperty("area")
+    private String area;
+
+    @JsonProperty("mobile_number")
+    private String mobileNUmber;
+
+    @JsonProperty("whats_app")
+    private String whatsApp;
 
     @JsonProperty("created_at")
     private Instant createdAt;
+
+    @JsonProperty("age")
+    private String age;
 
 
 }
